@@ -1,0 +1,71 @@
+ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/workflows/**'
+
+builtins:
+  - changed-files:
+      - any-glob-to-any-file: 'hermit-builtins/**'
+
+macro:
+  - changed-files:
+      - any-glob-to-any-file: 'hermit-macro/**'
+
+arch-aarch64:
+  - changed-files:
+      - any-glob-to-any-file: 'src/arch/aarch64/**'
+
+arch-riscv64:
+  - changed-files:
+      - any-glob-to-any-file: 'src/arch/riscv64/**'
+
+arch-x86_64:
+  - changed-files:
+      - any-glob-to-any-file: 'src/arch/x86_64/**'
+
+driver:
+  - changed-files:
+      - any-glob-to-any-file: 'src/drivers/**'
+
+executor:
+  - changed-files:
+      - any-glob-to-any-file: 'src/executor/**'
+
+fd:
+  - changed-files:
+      - any-glob-to-any-file: 'src/fd/**'
+
+fs:
+  - changed-files:
+      - any-glob-to-any-file: 'src/fs/**'
+
+mm:
+  - changed-files:
+      - any-glob-to-any-file: 'src/mm/**'
+
+scheduler:
+  - changed-files:
+      - any-glob-to-any-file: 'src/scheduler/**'
+
+synch:
+  - changed-files:
+      - any-glob-to-any-file: 'src/synch/**'
+
+syscalls:
+  - changed-files:
+      - any-glob-to-any-file: 'src/syscalls/**'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: 'tests/**'
+
+xtask:
+  - changed-files:
+      - any-glob-to-any-file: 'xtask/**'
+
+xtask:
+  - changed-files:
+      - any-glob-to-any-file: 'xtask/**'
+
+cargo:
+  - changed-files:
+      - any-glob-to-any-file: '**/Cargo.*'
