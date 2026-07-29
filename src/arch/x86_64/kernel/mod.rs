@@ -5,7 +5,6 @@ use core::ptr;
 use core::slice;
 use core::sync::atomic::{AtomicPtr, AtomicU32, Ordering};
 
-use hermit_entry::boot_info::RawBootInfo;
 use x86_64::registers::control::{Cr0, Cr4};
 
 pub(crate) use self::apic::{set_oneshot_timer, wakeup_core};
@@ -31,8 +30,6 @@ pub mod pit;
 pub mod processor;
 pub mod scheduler;
 pub mod serial;
-#[cfg(target_os = "none")]
-mod start;
 pub mod switch;
 #[cfg(feature = "common-os")]
 mod syscall;
@@ -158,37 +155,6 @@ pub static CPU_ONLINE: AtomicU32 = AtomicU32::new(0);
 
 pub static CURRENT_STACK_ADDRESS: AtomicPtr<u8> = AtomicPtr::new(ptr::null_mut());
 
-#[cfg(target_os = "none")]
-#[inline(never)]
-#[unsafe(no_mangle)]
-unsafe extern "C" fn pre_init(boot_info: Option<&'static RawBootInfo>, cpu_id: u32) -> ! {
-	use x86_64::registers::control::Cr0Flags;
-
-	// Enable caching
-	unsafe {
-		Cr0::update(|flags| flags.remove(Cr0Flags::CACHE_DISABLE | Cr0Flags::NOT_WRITE_THROUGH));
-	}
-
-	if cpu_id == 0 {
-		env::set_start_info(*boot_info.unwrap());
-
-		crate::boot_processor_main()
-	} else {
-		#[cfg(not(feature = "smp"))]
-		{
-			let style = anstyle::Style::new().fg_color(Some(anstyle::AnsiColor::Red.into()));
-			let preamble = format_args!("[            ][{cpu_id}][{style}ERROR{style:#}]");
-			println!(
-				"{preamble} Secondary core booted, but Hermit was not built with SMP support!"
-			);
-			loop {
-				processor::halt();
-			}
-		}
-		#[cfg(feature = "smp")]
-		crate::application_processor_main();
-	}
-}
 
 #[cfg(feature = "common-os")]
 const LOADER_START: usize = 0x0100_0000_0000;
